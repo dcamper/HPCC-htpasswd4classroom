@@ -19,9 +19,9 @@ The HPCC Systems cluster provides an authentication-only plugin that leverages A
 
 ## Building the Plugin
 
-This plugin requires access to the HPCC Systems source code, found on GitHub at [https://github.com/hpcc-systems/HPCC-Platform](https://github.com/hpcc-systems/HPCC-Platform).  You will need to actually build the platform code, so you'll need to get that done first.  See the "Build From Source" link in the README there.
+This plugin requires access to the HPCC Systems source code, found on GitHub at [https://github.com/hpcc-systems/HPCC-Platform](https://github.com/hpcc-systems/HPCC-Platform).  While it is not strictly required that you build the platform, you do need to make sure you have quite a bit of the dependencies fulfilled so the plugin builds without a hitch.  The easiest way to do that is to actually build the platform.  See the "Build From Source" link in the README there.
 
-It is also **very important** that match the platform's source code version with the version of the running cluster on which you will be installing this plugin (or at least the major.ninor version parts, like 7.10 or 7.12).  Checkout the correct git branch in the platform.
+When you build the plugin, it is **very important** that match the platform's source code version with the version of the running cluster on which you will be installing this plugin (or at least the major.minor version parts, like 7.10 or 7.12).  Checkout the correct git branch in the platform's code base.
 
 This plugin's code is built out-of-source, so we'll need to create a directory in which to build the plugin.  The following assumes this directory structure (~ means your home directory):
 
