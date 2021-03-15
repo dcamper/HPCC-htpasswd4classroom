@@ -56,6 +56,10 @@ The first difference between configuring the built-in plugin and this one is the
 
 The only other change is a new addition to this classroom plugin:  You can specify the usernames of the users that should be considered administrators of the cluster.  The administrators do not have the workunit restriction imposed on them; they can see all workunits.  In configmgr, when you configure the plugin itself, there is a field labeled "adminUsers" -- that is where you define those administrator users.  The username "admin" is populated by default.  To add more usernames, just edit the field and use a comma to separate the usernames.  If you submit an empty field then the username "admin" will be added to the internal list at runtime.
 
+Here is a screenshot showing two admin users defined, "admin" and "dcamper":
+
+![configmgr_screenshot](assets/configmgr.png)
+
 ## Configuring Users in the .htpasswd File
 
 You should define at least one of the administrator's usernames and passwords in the .htpasswd file before you restart the cluster.  If you used the recommended default configuration for plugin and you do not have an existing .htpasswd file, and the you want to define the username "admin" then steps would be:
@@ -66,6 +70,31 @@ You should define at least one of the administrator's usernames and passwords in
 If already have an existing .htpasswd file, omit the `-c` argument.  This example also assumes your file is at `/etc/HPCCSystems/.htpasswd` which is the recommended default location for this file.
 
 To add other users, such as other administrators or students, use the same technique as with the admin user above.  Be sure to omit the `-c` argument though, or you will be constantly truncating your .htpasswd file.
+
+Here is a sample session for creating the users and passwords for our two admin users:
+
+    campda01@ubuntu-20-04:/etc/HPCCSystems $ sudo htpasswd -c .htpasswd admin
+    New password:
+    Re-type new password:
+    Adding password for user admin
+
+    campda01@ubuntu-20-04:/etc/HPCCSystems $ ls -al .htpasswd
+    -rw-r--r-- 1 hpcc hpcc 44 Mar 15 13:35 .htpasswd
+
+    campda01@ubuntu-20-04:/etc/HPCCSystems $ cat .htpasswd
+    admin:$apr1$UxXmd1FO$kD0euf1J9oe8DBWWZBPYw0
+
+    campda01@ubuntu-20-04:/etc/HPCCSystems $ sudo htpasswd .htpasswd dcamper
+    New password:
+    Re-type new password:
+    Adding password for user dcamper
+
+    campda01@ubuntu-20-04:/etc/HPCCSystems $ ls -al .htpasswd
+    -rw-r--r-- 1 hpcc hpcc 90 Mar 15 13:35 .htpasswd
+
+    campda01@ubuntu-20-04:/etc/HPCCSystems $ cat .htpasswd
+    admin:$apr1$UxXmd1FO$kD0euf1J9oe8DBWWZBPYw0
+    dcamper:$apr1$E8l.uC6S$LfB56u10UzTUFEcSmBpv1.
 
 ## HPCC Cluster After Plugin Installation
 
