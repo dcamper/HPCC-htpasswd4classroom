@@ -40,6 +40,10 @@ Build steps:
 
 At this point you will have a .rpm or .deb installation package that you can install onto your cluster.  The package will have a name like `htpasswd4ClassroomSecurity_1.0.0_focal_amd64.deb` (this was built on an Ubuntu 20.04 system).
 
+## Cluster Requirements
+
+Make sure the htpasswd utility is installed on the HPCC Systems node that runs the esp process (the one you connect to for ECL Watch).  This is usually not a stand-alone utility; you need to install the `apache2-utils` package instead, and htpassword is part of that.  Use either apt (Debian) or yum (CentOS) to perform that installation.
+
 ## Installing the Plugin
 
 Installation is straightforward:  Copy the package file you just build to the HPCC node running the esp process (this is typically the one you connect to with ECL Watch) and install it using whatever tool you use to install packages.  On the command line, that would be either dpkg (Debian) or yum (CentOS), but you could also use a GUI application if you wish.
