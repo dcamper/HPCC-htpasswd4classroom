@@ -30,6 +30,30 @@ CMD_SET := 'set';
 CMD_DELETE := 'delete';
 CMD_LIST := 'list';
 
+//-----------------------------------------------------------------------------
+// Parameters
+//
+//      admin_secret        The secret value set by the SECRET_VALUE constant;
+//                          value submitted must match constant exactly in order
+//                          for the query to succeed
+//      action              One of 'set' (create or update user/pw), 'delete'
+//                          (delete user and pw), or 'list' (show users and
+//                          their encrypted passwords)
+//      username            The username to create/update/delete; can be a
+//                          comma-delimited list of usernames, in which case
+//                          the action will be applied to all of them
+//      password            The password for the user designated by username;
+//                          must not be empty; required only if action is 'set'
+//                          and you want to set a specific password; if a non-
+//                          empty string is submitted and multiple usernames
+//                          are also provided, then the users will all acquire
+//                          the same password; if no password is provided and
+//                          the action is 'set' then a random password will
+//                           be chosen for each username
+//      verify_password     Repeat of the value in password field, if a value
+//                          was provided
+//-----------------------------------------------------------------------------
+
 #IF(SECRET_VALUE != '')
     STRING  _secret := '' : STORED('admin_secret', FORMAT(SEQUENCE(500), PASSWORD));
 #END
