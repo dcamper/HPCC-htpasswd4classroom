@@ -26,9 +26,9 @@
     #define HTPASSWD4CLASSROOMSECURITY_API DECL_EXPORT
 #endif //HTPASSWD4CLASSROOMSECURITY_EXPORTS
 
-#endif 
+#endif
 
-extern "C" 
+extern "C"
 {
     HTPASSWD4CLASSROOMSECURITY_API ISecManager * createInstance(const char *serviceName, IPropertyTree &secMgrCfg, IPropertyTree &bndCfg);
 }
