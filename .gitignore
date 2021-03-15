@@ -1,0 +1,6 @@
+.DS_Store
+.eclcc
+.vscode
+eclcc.log
+**/eclcc.log
+**/Test*
