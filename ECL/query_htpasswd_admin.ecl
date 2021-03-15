@@ -8,7 +8,23 @@ IMPORT * FROM LanguageExtensions;
 // This code should be published as an hthor query
 //-----------------------------------------------------------------------------
 
+//-----------------------------------------------------------------------------
+// Constants to change for your environment
+//-----------------------------------------------------------------------------
+
+// The secret value someone must enter on the query form in order to successfully
+// modify the user file; can be empty but, if it is, anyone will be able to make
+// changes and that is probably a Bad Thing
 SECRET_VALUE := 'Secret123';
+
+// The full path to the htpasswd binary application
+HTPASSWD_BIN := '/usr/bin/htpasswd';
+
+// The full path to the htpasswd user file; this must match the file entered in
+// the HPCC Systems configmgr configuration screen
+HTPASSWD_FILE_PATH := '/etc/HPCCSystems/.htpasswd';
+
+//-----------------------------------------------------------------------------
 
 CMD_SET := 'set';
 CMD_DELETE := 'delete';
@@ -52,11 +68,6 @@ IF(needsPassword AND password != passwordVerify, FAIL('Password entries do not m
 
 //-----------------------------------------------------------------------------
 
-HTPASSWD_BIN := '/usr/bin/htpasswd';
-HTPASSWD_PATH := '/etc/HPCCSystems/.htpasswd';
-
-//-----------------------------------------------------------------------------
-
 FinalResultLayout := RECORD
     STRING      result__html;
 END;
@@ -74,7 +85,7 @@ END;
 STRING FileContents() := FUNCTION
     ds1 := DATASET
         (
-            DYNAMIC(Std.File.ExternalLogicalFileName('127.0.0.1', HTPASSWD_PATH)),
+            DYNAMIC(Std.File.ExternalLogicalFileName('127.0.0.1', HTPASSWD_FILE_PATH)),
             {STRING s},
             CSV(SEPARATOR('')),
             OPT
@@ -112,7 +123,7 @@ GeneratedPasswords(UNSIGNED2 numPasswords) := FUNCTION
 
     // Naughty words sourced from https://github.com/LDNOOBW/naughty-words-js
     // Some of these words a most certainly not in the dictionary file, but it's
-    // better to include them anyway
+    // better to include them anyway; squeamish people should skip this text block
     naughtyWordList :=
         [
             'acrotomophilia', 'anal', 'anilingus', 'anus', 'apeshit', 'arsehole', 'ass',
@@ -211,7 +222,7 @@ END;
 
 //-------------------------------------
 
-DoesFileExist() := Std.File.FileExists(Std.File.ExternalLogicalFileName('127.0.0.1', HTPASSWD_PATH));
+DoesFileExist() := Std.File.FileExists(Std.File.ExternalLogicalFileName('127.0.0.1', HTPASSWD_FILE_PATH));
 
 //-------------------------------------
 
@@ -221,7 +232,7 @@ BOOLEAN CreateNewPassword(STRING username, STRING userPW) := FUNCTION
     // htpasswd -b [-c] file_path username password
     pipeRes := PIPE
         (
-            HTPASSWD_BIN + ' -b ' + optionalSetCmdOptions + HTPASSWD_PATH + ' ' + username + ' ' + userPW,
+            HTPASSWD_BIN + ' -b ' + optionalSetCmdOptions + HTPASSWD_FILE_PATH + ' ' + username + ' ' + userPW,
             PipeResultLayout,
             CSV
         );
@@ -241,7 +252,7 @@ BOOLEAN DeleteUser(STRING username) := FUNCTION
     // htpassword -D file_path username
     pipeRes := PIPE
         (
-            HTPASSWD_BIN + ' -D ' + HTPASSWD_PATH + ' ' + username,
+            HTPASSWD_BIN + ' -D ' + HTPASSWD_FILE_PATH + ' ' + username,
             PipeResultLayout,
             CSV
         );
