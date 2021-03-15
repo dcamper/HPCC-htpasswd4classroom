@@ -52,6 +52,10 @@ CMD_LIST := 'list';
 //                           be chosen for each username
 //      verify_password     Repeat of the value in password field, if a value
 //                          was provided
+//
+// Sample curl call when this is installed as an hthor query:
+//
+//      curl 'localhost:8002/WsEcl/submit/query/hthor/htpasswd_pws/json?admin_secret=Secret123&action=set&username=user1&password=MyNewPassword&verify_password=MyNewPassword'
 //-----------------------------------------------------------------------------
 
 #IF(SECRET_VALUE != '')
