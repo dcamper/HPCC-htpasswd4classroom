@@ -151,6 +151,10 @@ Deleting a user does not require their password; only their username is required
 All ROXIE and hthor queries can also be accessed via JSON REST calls.  Basically, all the fields shown above become query parameters in the URL.  Example:
 
     curl 'localhost:8002/WsEcl/submit/query/hthor/htpasswd_pws/json?admin_secret=Secret123&action=set&username=user1&password=MyNewPassword&verify_password=MyNewPassword'
+    {"htpasswd_pwsResponse": {
+    "Results": {
+     "update": {"Row": [
+       {"result__html": "Create/update user1:SUCCEEDED"}]}}}}
 
 Note that you may need to supply a valid basic authorization header in your request if the system has an active authentication system (like what this plugin provides).
 
