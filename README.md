@@ -58,7 +58,7 @@ The only other change is a new addition to this classroom plugin:  You can speci
 
 Here is a screenshot showing two admin users defined, "admin" and "dcamper":
 
-![configmgr_screenshot](assets/configmgr.png)
+![configmgr_screenshot](README_assets/configmgr.png)
 
 ## Configuring Users Via the Command Line
 
@@ -122,7 +122,7 @@ This file should be customized for your installation.  The following is an excer
 
 Once you modify the constants to your satisfaction, you should compile the file on hthor and then publish the workunit.  The query name will be `htpasswd_pws`.  If you go to the ROXIE page on your cluster (e.g. http://localhost:8002/) and select the query, you should see something like this:
 
-![query_htpasswd_admin_screenshot](assets/query_htpasswd_admin.png)
+![query_htpasswd_admin_screenshot](README_assets/query_htpasswd_admin.png)
 
 Every query submission requires you to reenter the `admin_secret` (the value of SECRET_VALUE from the ECL code).
 
@@ -136,17 +136,17 @@ The `username` field must be filled in when `action` is either `set` or `delete`
 
 If `action` is `set` then the password fields come into play.  To set an explicit password for a user, enter that password.  If more than one username is put into the `username` field then all of those users will acquire the same password.  If you leave both password fields empty, the ECL code will generate a random password for each username.
 
-![query_htpasswd_admin_set_resultscreenshot](assets/query_htpasswd_admin_set_result.png)
+![query_htpasswd_admin_set_resultscreenshot](README_assets/query_htpasswd_admin_set_result.png)
 
 _**Note regarding password generation:**  A generated password is two 3-6 character words separated by a random punctuation mark.  The words are chosen from the system's dictionary file, provided with all Linux distributions.  That word list is not culled for so-called naughty words.  The ECL code does make an attempt to remove naughty words from the list, but no one has exhaustively reviewed all of the possible words to ensure that they were all caught.  In addition, seemingly-innocent words, when concatenated with a punctuation symbol, could acquire a new meaning that may not be desirable.  It is strongly recommended that you review random passwords for suitability.  If you find something that is questionable, you can always redo that user's entry using this code._
 
 You can view the contents of the .htpasswd file (useful primarily to ensure that all the usernames you need are present).
 
-![query_htpasswd_admin_listresultscreenshot](assets/query_htpasswd_admin_list_result.png)
+![query_htpasswd_admin_listresultscreenshot](README_assets/query_htpasswd_admin_list_result.png)
 
 Deleting a user does not require their password; only their username is required.
 
-![query_htpasswd_admin_delete_resultscreenshot](assets/query_htpasswd_admin_delete_result.png)
+![query_htpasswd_admin_delete_resultscreenshot](README_assets/query_htpasswd_admin_delete_result.png)
 
 All ROXIE and hthor queries can also be accessed via JSON REST calls.  Basically, all the fields shown above become query parameters in the URL.  Example:
 
