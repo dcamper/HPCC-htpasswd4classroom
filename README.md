@@ -21,7 +21,7 @@ The HPCC Systems cluster provides an authentication-only plugin that leverages A
 
 This plugin requires access to the HPCC Systems source code, found on GitHub at [https://github.com/hpcc-systems/HPCC-Platform](https://github.com/hpcc-systems/HPCC-Platform).  While it is not strictly required that you build the platform, you do need to make sure you have quite a bit of the dependencies fulfilled so the plugin builds without a hitch.  The easiest way to do that is to actually build the platform.  See the "Build From Source" link in the README there.
 
-When you build the plugin, it is **very important** that match the platform's source code version with the version of the running cluster on which you will be installing this plugin (or at least the major.minor version parts, like 7.10 or 7.12).  Checkout the correct git branch in the platform's code base.
+When you build the plugin, it is **very important** that match the platform's source code version with the version of the running cluster on which you will be installing this plugin (or at least the major.minor version parts, like 7.10 or 7.12).  Checkout the correct git branch in the platform's code base.  Also, make sure you're building the plugin against the same operating system as what your running cluster is using.
 
 This plugin's code is built out-of-source, so we'll need to create a directory in which to build the plugin.  The following assumes this directory structure (~ means your home directory):
 
@@ -96,6 +96,58 @@ Here is a sample session for creating the users and passwords for our two admin 
     admin:$apr1$UxXmd1FO$kD0euf1J9oe8DBWWZBPYw0
     dcamper:$apr1$E8l.uC6S$LfB56u10UzTUFEcSmBpv1.
 
+## hthor-based Helper
+
+Included with this plugin is [an ECL file](ECL/query_htpasswd_admin.ecl) that can be used to provide an API of sorts for user management.  That code is intended to become an hthor query, which is something of an oddity in the HPCC Systems world.  The reason for using hthor over, say, ROXIE, is that it is far more likely that hthor will share system resources with the esp process, which in turn is probably sharing the storage space where your .htpasswd file lives.  Since the ECL code issues commands to the htpasswd binary, it needs access to both the binary and the password file.
+
+This file should be customized for your installation.  The following is an excerpt from the beginning of the file:
+
+    // The secret value someone must enter on the query form in order to successfully
+    // modify the user file; can be empty but, if it is, anyone will be able to make
+    // changes and that is probably a Bad Thing
+    SECRET_VALUE := 'Secret123';
+
+    // The full path to the htpasswd binary application
+    HTPASSWD_BIN := '/usr/bin/htpasswd';
+
+    // The full path to the htpasswd user file; this must match the file entered in
+    // the HPCC Systems configmgr configuration screen
+    HTPASSWD_FILE_PATH := '/etc/HPCCSystems/.htpasswd';
+
+Once you modify the constants to your satisfaction, you should compile the file on hthor and then publish the workunit.  The query name will be `htpasswd_pws`.  If you go to the ROXIE page on your cluster (e.g. http://localhost:8002/) and select the query, you should see something like this:
+
+![query_htpasswd_admin_screenshot](assets/query_htpasswd_admin.png)
+
+Every query submission requires you to reenter the `admin_secret` (the value of SECRET_VALUE from the ECL code).
+
+There are three possible actions:
+
+* set:  Create or update one or more users.
+* delete: Delete one or more users.
+* list: Show the contents of the .htpasswd file.
+
+The `username` field must be filled in when `action` is either `set` or `delete`.  You can operate on more than one username at the same time by separating the usernames with commas.
+
+If `action` is `set` then the password fields come into play.  To set an explicit password for a user, enter that password.  If more than one username is put into the `username` field then all of those users will acquire the same password.  If you leave both password fields empty, the ECL code will generate a random password for each username.
+
+![query_htpasswd_admin_set_resultscreenshot](assets/query_htpasswd_admin_set_result.png)
+
+_**Note regarding password generation:**  A generated password is two 3-6 character words separated by a random punctuation mark.  The words are chosen from the system's dictionary file, provided with all Linux distributions.  That word list is not culled for so-called naughty words.  The ECL code does make an attempt to remove naughty words from the list, but no one has exhaustively reviewed all of the possible words to ensure that they were all caught.  In addition, seemingly-innocent words, when concatenated with a punctuation symbol, could acquire a new meaning that may not be desirable.  It is strongly recommended that you review random passwords for suitability.  If you find something that is questionable, you can always redo that user's entry using this code._
+
+You can view the contents of the .htpasswd file (useful primarily to ensure that all the usernames you need are present).
+
+![query_htpasswd_admin_listresultscreenshot](assets/query_htpasswd_admin_list_result.png)
+
+Deleting a user does not require their password; only their username is required.
+
+![query_htpasswd_admin_delete_resultscreenshot](assets/query_htpasswd_admin_delete_result.png)
+
+All ROXIE and hthor queries can also be accessed via JSON REST calls.  Basically, all the fields shown above become query parameters in the URL.  Example:
+
+    curl 'localhost:8002/WsEcl/submit/query/hthor/htpasswd_pws/json?admin_secret=Secret123&action=set&username=user1&password=MyNewPassword&verify_password=MyNewPassword'
+
+Note that you may need to supply a valid basic authorization header in your request if the system has an active authentication system (like what this plugin provides).
+
 ## HPCC Cluster After Plugin Installation
 
 There are only a few changes from a "standard" HPCC usage:
@@ -103,4 +155,4 @@ There are only a few changes from a "standard" HPCC usage:
 * All users will have to authenticate with a username and password.
 * Regular users will not be able to view other users' workunits.
 * Only the admin users can view all workunits.
-* All other permissions remain the same as with cluster not running any security policies (i.e. wide open).
+* All other permissions remain the same as with a cluster not running any security policies (i.e. wide open).
