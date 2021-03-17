@@ -21,7 +21,7 @@ The HPCC Systems cluster provides an authentication-only plugin that leverages A
 
 This plugin requires access to the HPCC Systems source code, found on GitHub at [https://github.com/hpcc-systems/HPCC-Platform](https://github.com/hpcc-systems/HPCC-Platform).  While it is not strictly required that you build the platform, you do need to make sure you have quite a bit of the dependencies fulfilled so the plugin builds without a hitch.  The easiest way to do that is to actually build the platform.  See the "Build From Source" link in the README there.
 
-When you build the plugin, it is **very important** that match the platform's source code version with the version of the running cluster on which you will be installing this plugin (or at least the major.minor version parts, like 7.10 or 7.12).  Checkout the correct git branch in the platform's code base.  Also, make sure you're building the plugin against the same operating system as what your running cluster is using.
+When you build the plugin, it is **very important** that you match the platform's source code version with the version of the running cluster on which you will be installing this plugin (or at least the major.minor version parts, like 7.10 or 7.12).  Checkout the correct git branch in the platform's code base.  Also, make sure you're building the plugin against the same operating system as what your running cluster is using.
 
 This plugin's code is built out-of-source, so we'll need to create a directory in which to build the plugin.  The following assumes this directory structure (~ means your home directory):
 
@@ -60,9 +60,11 @@ Here is a screenshot showing two admin users defined, "admin" and "dcamper":
 
 ![configmgr_screenshot](assets/configmgr.png)
 
-## Configuring Users in the .htpasswd File
+## Configuring Users Via the Command Line
 
-You should define at least one of the administrator's usernames and passwords in the .htpasswd file before you restart the cluster.  If you used the recommended default configuration for plugin and you do not have an existing .htpasswd file, and the you want to define the username "admin" then steps would be:
+You should define at least one of the administrator's usernames and passwords in the .htpasswd file before you restart the cluster.  Use `man htpasswd` on the command line to see all of the options and to obtain an overview of what the utility does.
+
+If you used the recommended default configuration for plugin, you do not have an existing .htpasswd file, and you want to define the username "admin" then steps would be:
 
     cd /etc/HPCCSystems
     sudo htpasswd -c .htpasswd admin
@@ -96,7 +98,11 @@ Here is a sample session for creating the users and passwords for our two admin 
     admin:$apr1$UxXmd1FO$kD0euf1J9oe8DBWWZBPYw0
     dcamper:$apr1$E8l.uC6S$LfB56u10UzTUFEcSmBpv1.
 
-## hthor-based Helper
+Within the .htpasswd file, there is no difference between admin and regular users.  This file is for authentication only.  Authorization -- who can do what -- is handled by the plugin.
+
+Note that changes made to the .htpasswd file take effect immediately, even for a running cluster.
+
+## Configuring Users Via the hthor-based Helper
 
 Included with this plugin is [an ECL file](ECL/query_htpasswd_admin.ecl) that can be used to provide an API of sorts for user management.  That code is intended to become an hthor query, which is something of an oddity in the HPCC Systems world.  The reason for using hthor over, say, ROXIE, is that it is far more likely that hthor will share system resources with the esp process, which in turn is probably sharing the storage space where your .htpasswd file lives.  Since the ECL code issues commands to the htpasswd binary, it needs access to both the binary and the password file.
 
@@ -147,6 +153,8 @@ All ROXIE and hthor queries can also be accessed via JSON REST calls.  Basically
     curl 'localhost:8002/WsEcl/submit/query/hthor/htpasswd_pws/json?admin_secret=Secret123&action=set&username=user1&password=MyNewPassword&verify_password=MyNewPassword'
 
 Note that you may need to supply a valid basic authorization header in your request if the system has an active authentication system (like what this plugin provides).
+
+Changes made to the .htpasswd file through this code take immediate effect.
 
 ## HPCC Cluster After Plugin Installation
 
