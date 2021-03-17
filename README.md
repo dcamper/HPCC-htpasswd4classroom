@@ -2,6 +2,14 @@
 
 Copyright (C) 2021 HPCC Systems
 
+## What Is This
+
+This project builds a security manager plugin for the HPCC Systems big data platform.  See [https://hpccsystems.com](https://hpccsystems.com) for more information.  Source code for the platform can be found at [https://github.com/hpcc-systems/HPCC-Platform](https://github.com/hpcc-systems/HPCC-Platform).
+
+## Compatibility
+
+This plugin requires HPCC Systems platform version 7.12.0 or later.
+
 ## Motivation
 
 Classroom settings that involve grading the students' work should not allow easy cheating.  Unfortunately, a wide-open HPCC Systems cluster is exactly that, unless user authorization is enabled.  A student can use ECL Watch to look at another student's workunit and therefore the workunit's code, then do with it what they will.
@@ -17,11 +25,26 @@ The above plugins are really overkill if the only thing we're trying to do is pr
 
 The HPCC Systems cluster provides an authentication-only plugin that leverages Apache's htpasswd scheme.  We decided to modify that plugin so that it also enforces the workunit restriction we need while leaving everything else wide open.  This is a solution with a very narrow use case, so this plugin is not generally available, but it _is_ very simple.
 
+## Prebuilt Plugins
+
+Some plugins have been built for you and reside in this repo.  Check in the [prebuilt_packages](prebuilt_packages) subdirectory.  To date, there has been no concerted effort to build plugins for every platform version or every supported operating system.  It's more of an opportunistic thing.  If you want to see a plugin prebuilt and put here, send an email to dan.camper@lexisnexisrisk.com.
+
+The format of the filenames is:
+
+    htpasswd4ClassroomSecurity_hpcc_<v1>_plugin_<v2>_<platform>.<package_suffix>
+
+Where:
+
+* v1: The version of the HPCC Systems platform for which this plugin is built.
+* v2: The version of this plugin.
+* platform: The name of the operating system for which this plugin is built.  My Ubuntu 20.04 system shows this as 'focal_amd64' for example.
+* package_suffix: .deb for Debian or .rpm for CentOS.
+
 ## Building the Plugin
 
 This plugin requires access to the HPCC Systems source code, found on GitHub at [https://github.com/hpcc-systems/HPCC-Platform](https://github.com/hpcc-systems/HPCC-Platform).  While it is not strictly required that you build the platform, you do need to make sure you have quite a bit of the dependencies fulfilled so the plugin builds without a hitch.  The easiest way to do that is to actually build the platform.  See the "Build From Source" link in the README there.
 
-When you build the plugin, it is **very important** that you match the platform's source code version with the version of the running cluster on which you will be installing this plugin (or at least the major.minor version parts, like 7.10 or 7.12).  Checkout the correct git branch in the platform's code base.  Also, make sure you're building the plugin against the same operating system as what your running cluster is using.
+When you build the plugin, it is **very important** that you match the platform's source code version with the version of the running cluster on which you will be installing this plugin (or at least the major.minor version parts, like 7.12).  Checkout the correct git branch in the platform's code base.  Also, make sure you're building the plugin against the same operating system as what your running cluster is using.
 
 This plugin's code is built out-of-source, so we'll need to create a directory in which to build the plugin.  The following assumes this directory structure (~ means your home directory):
 

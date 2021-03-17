@@ -128,6 +128,9 @@ endif ()
 # End common compiler settings extracted from platform's cmake_modules/commonSetup.cmake
 #############################################
 
+include(${HPCC_SOURCE_DIR}/version.cmake)
+set(HPCC_VERSION_STRING "${HPCC_MAJOR}.${HPCC_MINOR}.${HPCC_POINT}")
+
 if(APPLE)
   set(CMAKE_MACOSX_RPATH ON)
 endif()
@@ -222,7 +225,7 @@ execute_process(
 message("-- Auto Detecting Packaging type")
 message("-- distro uses ${packageManagement}, revision is ${packageRevisionArch}")
 
-set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}_${CPACK_PACKAGE_VERSION}_${packageRevisionArch}")
+set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}_hpcc_${HPCC_VERSION_STRING}_plugin_${CPACK_PACKAGE_VERSION}_${packageRevisionArch}")
 
 if("${packageManagement}" STREQUAL "DEB")
     set(CPACK_GENERATOR "${packageManagement}")
