@@ -42,7 +42,7 @@ Where:
 
 ## Building the Plugin
 
-This plugin requires access to the HPCC Systems source code, found on GitHub at [https://github.com/hpcc-systems/HPCC-Platform](https://github.com/hpcc-systems/HPCC-Platform).  While it is not strictly required that you build the platform, you do need to make sure you have quite a bit of the dependencies fulfilled so the plugin builds without a hitch.  The easiest way to do that is to actually build the platform.  See the "Build From Source" link in the README there.
+This plugin requires both access to the HPCC Systems source code, found on GitHub at [https://github.com/hpcc-systems/HPCC-Platform](https://github.com/hpcc-systems/HPCC-Platform), and access to a built (and installed) HPCC Platform.  The reason for requiring a built/installed platform is that the plugin needs one or two platform-specific libraries during the linking stage.  See the "Build From Source" link in the platform's README for instructions on building everything.
 
 When you build the plugin, it is **very important** that you match the platform's source code version with the version of the running cluster on which you will be installing this plugin (or at least the major.minor version parts, like 7.12).  Checkout the correct git branch in the platform's code base.  Also, make sure you're building the plugin against the same operating system as what your running cluster is using.
 
