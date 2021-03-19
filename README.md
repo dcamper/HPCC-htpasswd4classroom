@@ -25,22 +25,22 @@ The above plugins are really overkill if the only thing we're trying to do is pr
 
 The HPCC Systems cluster provides an authentication-only plugin that leverages Apache's htpasswd scheme.  We decided to modify that plugin so that it also enforces the workunit restriction we need while leaving everything else wide open.  This is a solution with a very narrow use case, so this plugin is not generally available, but it _is_ very simple.
 
-## Prebuilt Plugins
+## Prebuilt Plugin Packages
 
-Some plugins have been built for you and reside in this repo.  Check in the [prebuilt_packages](prebuilt_packages) subdirectory.  To date, there has been no concerted effort to build plugins for every platform version or every supported operating system.  It's more of an opportunistic thing.  If you want to see a plugin prebuilt and put here, send an email to dan.camper@lexisnexisrisk.com.
+Some plugin packages have been built for you and reside in this repo.  Check in the [prebuilt_packages](prebuilt_packages) subdirectory.  To date, there has been no concerted effort to build packages for every platform version or every supported operating system.  It's more of an opportunistic thing.  If you want to see a particular prebuilt package put here, send an email to dan.camper@lexisnexisrisk.com.
 
-The format of the filenames is:
+The format of a package filename is:
 
     htpasswd4ClassroomSecurity_hpcc_<v1>_plugin_<v2>_<platform>.<package_suffix>
 
 Where:
 
-* v1: The version of the HPCC Systems platform for which this plugin is built.
-* v2: The version of this plugin.
-* platform: The name of the operating system for which this plugin is built.  My Ubuntu 20.04 system shows this as 'focal_amd64' for example.
+* v1: The version of the HPCC Systems platform for which this package is built.
+* v2: The version of the plugin within the package.
+* platform: The name of the operating system for which this package is built.  My Ubuntu 20.04 system shows this as 'focal_amd64' for example.
 * package_suffix: .deb for Debian or .rpm for CentOS.
 
-If you choose to use a prebuilt plugin, you can skip the next section ("Building the Plugin").
+If you choose to use a prebuilt package, you can skip the next section ("Building the Plugin").
 
 ## Building the Plugin
 
@@ -75,6 +75,8 @@ Build steps:
 At this point you will have a .rpm or .deb installation package that you can install onto your cluster.  The package will have a name like `htpasswd4ClassroomSecurity_1.0.0_focal_amd64.deb` (this was built on an Ubuntu 20.04 system).
 
 ## Cluster Requirements
+
+As mentioned above, this plugin is compatible with HPCC Systems platform 7.12.0 and later.
 
 Make sure the htpasswd utility is installed on the HPCC Systems node that runs the esp process (the one you connect to for ECL Watch).  This is usually not a stand-alone utility; you need to install the `apache2-utils` package instead, and htpassword is part of that.  Use either apt (Debian) or yum (CentOS) to perform that installation.
 
