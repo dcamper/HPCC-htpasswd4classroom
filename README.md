@@ -79,7 +79,7 @@ Build steps assuming you don't have a platform build directory but the platform 
         ~/Projects/HPCC-htpasswd4classroom
     make package
 
-At this point you will have a .rpm or .deb installation package that you can install onto your cluster.  The package will have a name like `htpasswd4ClassroomSecurity_1.0.0_focal_amd64.deb` (this was built on an Ubuntu 20.04 system).
+At this point you will have a .rpm or .deb installation package that you can install onto your cluster.  The package will have a name like `htpasswd4ClassroomSecurity_hpcc_7.12.39_plugin_1.0.0_focal_amd64.deb` (for an Ubuntu 20.04 system).
 
 ## Cluster Requirements
 
