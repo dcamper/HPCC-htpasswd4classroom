@@ -141,7 +141,7 @@ Here is a sample session for creating the users and passwords for our two admin 
     admin:$apr1$UxXmd1FO$kD0euf1J9oe8DBWWZBPYw0
     dcamper:$apr1$E8l.uC6S$LfB56u10UzTUFEcSmBpv1.
 
-Within the .htpasswd file, there is no difference between admin and regular users.  This file is for authentication only.  Authorization -- who can do what -- is handled by the plugin.
+Within the .htpasswd file, there is no difference between admin and regular users.  This file is for authentication only.  Authorization -- who can do what -- is handled by the plugin, and only the usernames cited in the configuration are considered "administrators" with wide-open access.
 
 Note that changes made to the .htpasswd file take effect immediately, even for a running cluster.
 
