@@ -62,12 +62,21 @@ The `cmake` step for configuring the plugin's project allows you to set two vari
 * HPCC_SOURCE_DIR:  The directory in which the platform source code lives.  This variable is required.
 * HPCC_BUILD_DIR:  The directory in which you built the platform source code.  This is optional.  If it is not defined then it is assumed that we're building on a system that has the HPCC System platform installed and the libraries we need are in /opt/HPCCSystems/lib/.
 
-Build steps:
+Build steps assuming you have a platform build directory:
 
     cd ~/HPCC-Plugin
     cmake \
         -DHPCC_SOURCE_DIR=~/Projects/HPCC-Platform \
         -DHPCC_BUILD_DIR=~/HPCC-Platform \
+        ~/Projects/HPCC-htpasswd4classroom
+    make
+    make package
+
+Build steps assuming you don't have a platform build directory but the platform has been installed:
+
+    cd ~/HPCC-Plugin
+    cmake \
+        -DHPCC_SOURCE_DIR=~/Projects/HPCC-Platform \
         ~/Projects/HPCC-htpasswd4classroom
     make
     make package
