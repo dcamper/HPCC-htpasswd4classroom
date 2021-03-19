@@ -18,6 +18,9 @@ cmake_minimum_required(VERSION 3.13.0)
 
 project(htpasswd4ClassroomSecurity)
 
+set(HPCC_SOURCE_DIR CACHE STRING "HPCC Platform source code directory")
+set(HPCC_BUILD_DIR CACHE STRING "HPCC Platform build directory")
+
 #############################################
 # Begin common compiler settings extracted from platform's cmake_modules/commonSetup.cmake
 #############################################
@@ -164,9 +167,20 @@ include_directories ("${HPCC_SOURCE_DIR}/system/include"
 
 ADD_DEFINITIONS(-DHTPASSWD4CLASSROOMSECURITY_EXPORTS -D_USRDLL)
 
+if(${HPCC_BUILD_DIR} STREQUAL "")
+    find_library(HPCC_JLIB
+                 jlib
+                 PATHS "${HPCC_LIB_DIR}"
+                 NO_DEFAULT_PATH REQUIRED)
+else()
+    find_library(HPCC_JLIB
+                 jlib
+                 PATHS "${HPCC_BUILD_DIR}/Debug/libs" "${HPCC_BUILD_DIR}/Release/libs"
+                 NO_DEFAULT_PATH REQUIRED)
+endif()
+
 # Add HPCC Systems installed local library directory to search path
 set(CMAKE_INSTALL_RPATH "${HPCC_LIB_DIR}")
-link_directories(htpasswd4ClassroomSecurity "${HPCC_LIB_DIR}")
 
 add_library(htpasswd4ClassroomSecurity SHARED ${SRCS})
 
@@ -176,7 +190,7 @@ install(TARGETS htpasswd4ClassroomSecurity
         ARCHIVE DESTINATION "${HPCC_LIB_DIR}")
 
 target_link_libraries(htpasswd4ClassroomSecurity
-                      PRIVATE jlib
+                      PRIVATE ${HPCC_JLIB}
                       PRIVATE ${APR_LIBRARIES}
                       PRIVATE ${APRUTIL_LIBRARIES})
 

@@ -42,22 +42,31 @@ Where:
 
 ## Building the Plugin
 
-This plugin requires both access to the HPCC Systems source code, found on GitHub at [https://github.com/hpcc-systems/HPCC-Platform](https://github.com/hpcc-systems/HPCC-Platform), and access to a built (and installed) HPCC Platform.  The reason for requiring a built/installed platform is that the plugin needs one or two platform-specific libraries during the linking stage.  See the "Build From Source" link in the platform's README for instructions on building everything.
+This plugin requires both access to the HPCC Systems source code, found on GitHub at [https://github.com/hpcc-systems/HPCC-Platform](https://github.com/hpcc-systems/HPCC-Platform), and access to either a built (not yet installed) HPCC Platform or an installed HPCC Platform.  The reason for requiring a built/installed platform is that the plugin needs one or two platform-specific libraries during the linking stage.  See the "Build From Source" link in the platform's README for instructions on building everything.
 
 When you build the plugin, it is **very important** that you match the platform's source code version with the version of the running cluster on which you will be installing this plugin (or at least the major.minor version parts, like 7.12).  Checkout the correct git branch in the platform's code base.  Also, make sure you're building the plugin against the same operating system as what your running cluster is using.
 
 This plugin's code is built out-of-source, so we'll need to create a directory in which to build the plugin.  The following assumes this directory structure (~ means your home directory):
 
     ~/
-        HPCC-Plugin/                          <- our build directory
+        HPCC-Platform/                        <- the platform's build directory
+        HPCC-Plugin/                          <- this plugin's build directory
         Projects/
             HPCC-Platform/                    <- HPCC platform source code
             HPCC-htpasswd4classroom/          <- this plugin's source code
 
+The `cmake` step for configuring the plugin's project allows you to set two variables the command line:
+
+* HPCC_SOURCE_DIR:  The directory in which the platform source code lives.  This variable is required.
+* HPCC_BUILD_DIR:  The directory in which you built the platform source code.  This is optional.  If it is not defined then it is assumed that we're building on a system that has the HPCC System platform installed and the libraries we need are in /opt/HPCCSystems/lib/.
+
 Build steps:
 
     cd ~/HPCC-Plugin
-    cmake -DHPCC_SOURCE_DIR=~/Projects/HPCC-Platform ~/Projects/HPCC-htpasswd4classroom
+    cmake \
+        -DHPCC_SOURCE_DIR=~/Projects/HPCC-Platform \
+        -DHPCC_BUILD_DIR=~/HPCC-Platform \
+        ~/Projects/HPCC-htpasswd4classroom
     make
     make package
 
