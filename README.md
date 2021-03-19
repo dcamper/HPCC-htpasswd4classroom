@@ -40,6 +40,8 @@ Where:
 * platform: The name of the operating system for which this plugin is built.  My Ubuntu 20.04 system shows this as 'focal_amd64' for example.
 * package_suffix: .deb for Debian or .rpm for CentOS.
 
+If you choose to use a prebuilt plugin, you can skip the next section ("Building the Plugin").
+
 ## Building the Plugin
 
 This plugin requires both access to the HPCC Systems source code, found on GitHub at [https://github.com/hpcc-systems/HPCC-Platform](https://github.com/hpcc-systems/HPCC-Platform), and access to either a built (not yet installed) HPCC Platform or an installed HPCC Platform.  The reason for requiring a built/installed platform is that the plugin needs one or two platform-specific libraries during the linking stage.  See the "Build From Source" link in the platform's README for instructions on building everything.
